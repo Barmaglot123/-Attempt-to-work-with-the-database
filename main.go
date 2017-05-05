@@ -1,14 +1,10 @@
 package main
 
 import (
-	_ "github.com/lib/pq"
-	_"github.com/jinzhu/gorm"
-
-	//"database/sql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/jinzhu/gorm"
 	"fmt"
 	"log"
-
-	"github.com/jinzhu/gorm"
 )
 
 type Car struct {
@@ -22,16 +18,12 @@ type Car struct {
 func main (){
 	
 	db, err := gorm.Open("postgres", "host=localhost dbname=myfisrtdb sslmode=disable")
-
+	defer db.close()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//fmt.Println(db.Exec("SELECT * FROM \"cars\""))
-	cars := make([]Car, 0)
-	db.Find(&cars)
-	fmt.Println(cars)
-
-
-
+	cars := new([]Car)
+	db.Find(cars)
+	fmt.Println(*cars)
 }
