@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"github.com/jinzhu/gorm"
 	"log"
+
 )
 
 type User struct {
@@ -17,8 +18,9 @@ type User struct {
 var db *gorm.DB
 
 func main () {
-	runServer()
 	connectToDatabase()
+	defer db.Close()
+	runServer()
 }
 
 
@@ -64,8 +66,8 @@ func runServer() {
 	r.Run(":3000")
 }
 func connectToDatabase(){
-	db, err := gorm.Open("postgres", "host=localhost dbname=my_first_databse sslmode=disable")
-	defer db.Close()
+	var err error
+	db, err = gorm.Open("postgres", "host=localhost dbname=my_first_databse sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
